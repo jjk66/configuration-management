@@ -1,0 +1,35 @@
+---
+# This playbook will setup a remote linux ubuntu server. 
+# It will setup base, nginx, a web app, and configure ssh keys for the user.
+#
+# Assumptions:
+# - The linux ubuntu server is a AWS EC2 instance.
+# - The instance is in the running state and is reachable via ssh.
+#
+# Usage:
+# ansible-playbook -i inventories setup.yml
+# available tags: base, nginx, webapp, ssh
+
+- name: "Configure Linux Ubuntu AWS EC2 Instance"
+  hosts: aws
+  become_method: sudo
+  become: true
+  gather_facts: true
+  tasks:
+    - include_role:
+        name: base
+      tags:
+        - base
+    - include_role:
+        name: nginx
+      tags:
+        - nginx
+    - include_role:
+        name: app
+      tags:
+        - app
+    - include_role:
+        name: ssh
+      tags:
+        - ssh
+

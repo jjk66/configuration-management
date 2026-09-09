@@ -1,0 +1,50 @@
+---
+- name: Wait for automatic updates to finish
+  ansible.builtin.shell: |
+    while fuser /var/lib/dpkg/lock-frontend /var/lib/apt/lists/lock /var/lib/dpkg/lock >/dev/null 2>&1; do
+      echo "Waiting for other apt processes to finish..."
+      sleep 5
+    done
+  changed_when: false
+  tags:
+    - base
+    - update
+
+- name: Update all packages to the latest version
+  ansible.builtin.apt:
+    upgrade: dist
+    update_cache: yes
+    cache_valid_time: 3600
+  tags:
+    - base
+    - update
+
+- name: Install common utilities
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ base_utilities }}"
+  tags:
+    - base
+    - utilities
+
+- name: Install fail2ban
+  ansible.builtin.apt:
+    name: fail2ban
+    state: present
+  tags:
+    - base
+    - fail2ban
+
+- name: Copy fail2ban configuration file
+  ansible.builtin.copy:
+    src: /etc/fail2ban/jail.conf
+    dest: /etc/fail2ban/jail.local
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0644'
+    force: no # prevents overwriting the file if it already exists
+  tags:
+    - base
+    - fail2ban

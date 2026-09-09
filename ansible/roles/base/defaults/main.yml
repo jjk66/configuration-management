@@ -1,0 +1,14 @@
+---
+base_utilities:
+  - git
+  - curl
+  - wget
+  - unzip
+  - tar
+  - vim
+  - htop
+  - firewalld
+  - python3
+  - python3-pip
+  - binutils
+  - net-tools
