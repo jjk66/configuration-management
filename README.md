@@ -26,6 +26,6 @@ The playbook should run each of the roles in the above order/sequence.
 
 The playbook should have tags so each role can run individually
 
-## Strech goal
+## Stretch goal
 Modify app to pull the app from GitHub and deploy it
 
