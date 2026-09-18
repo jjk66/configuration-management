@@ -7,7 +7,7 @@ https://roadmap.sh/projects/configuration-management
 Use a Linux server from a previous project, like one running on AWS or Digital Ocean.
 
 Use an Ansible playbook to setup the Linux server.
-- plabook name: setup.yml
+- playbook name: setup.yml
 - playbook roles:
   - base
     - basic server setup to install utilities, update the server, installs fail2ban, etc
@@ -29,3 +29,19 @@ The playbook should have tags so each role can run individually
 ## Stretch goal
 Modify app to pull the app from GitHub and deploy it
 
+## Get the project
+clone 
+
+## Configure inventory
+Add the EC2 instances Public IP address
+Update the inventory.ini with the your IP address
+50.16.46.0
+
+## Base configuration
+Run the ansible playbook base to update the instance with desired base content
+```bash
+# cd <cloned dir>/ansible
+ansible-playbook setup.yml -i ./inventory/inventory.ini --tags base
+```
+
+## 
