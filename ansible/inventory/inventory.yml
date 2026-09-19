@@ -1,0 +1,8 @@
+---
+all:
+  children:
+    # ansible user and ssh key are defined in group_vars/aws.yml
+    aws:
+      hosts:
+        aws_instance:
+          ansible_host: "{{ ip_address }}"

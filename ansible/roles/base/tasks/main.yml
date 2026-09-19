@@ -1,4 +1,12 @@
 ---
+- name: Assert required variables are defined
+  ansible.builtin.assert:
+    that:
+      - base_utilities is defined
+    fail_msg: "The variable 'base_utilities' must be defined in the playbook or inventory."
+  tags:
+    - base
+
 - name: Wait for automatic updates to finish
   ansible.builtin.shell: |
     while fuser /var/lib/dpkg/lock-frontend /var/lib/apt/lists/lock /var/lib/dpkg/lock >/dev/null 2>&1; do

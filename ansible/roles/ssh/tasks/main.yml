@@ -1,0 +1,5 @@
+---
+- name: Add SSH public key to the server
+  authorized_key:
+    user: "{{ ansible_user }}"
+    key: "{{ lookup('file', '~/{{ ansible_user }}/.ssh/{{ ssh_pem }}) }}"

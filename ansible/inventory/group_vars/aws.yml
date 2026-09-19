@@ -1,4 +1,7 @@
 ---
+ansible_user: ubuntu
+ip_address: 5.6.7.8
+ssh_pem: /Users/jjklug/.ssh/aws-test-key.pem
 base_utilities:
   - git
   - curl

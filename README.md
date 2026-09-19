@@ -19,7 +19,7 @@ Use an Ansible playbook to setup the Linux server.
   - ssh
     - add a given public key to the server
 - inventory
-  - name: inventory.ini
+  - name: inventory.yml
   - include the server you are going to configure
 
 The playbook should run each of the roles in the above order/sequence.
@@ -30,18 +30,41 @@ The playbook should have tags so each role can run individually
 Modify app to pull the app from GitHub and deploy it
 
 ## Get the project
-clone 
+Clone the project
+```bash
+git clone git@github.com:jjk66/configuration-management.git
+cd configuration-management
+```
 
-## Configure inventory
-Add the EC2 instances Public IP address
-Update the inventory.ini with the your IP address
-50.16.46.0
+## Configure inventory group vars
+The ansible playbooks utilize inventory group vars to populate the inventory file, ansible user, and ssh pem file to use.
+
+After your instance is running, obtain your instances IP address and ssh pem file. You will need to pass this infomation into the provided tool to update the group vars file (named aws) with your desired values.
+
+```bash
+./tools/update-group-vars.sh <your Linux host IP address> <your ssh public key>
+```
 
 ## Base configuration
 Run the ansible playbook base to update the instance with desired base content
 ```bash
-# cd <cloned dir>/ansible
-ansible-playbook setup.yml -i ./inventory/inventory.ini --tags base
+ansible-playbook ./ansible/setup.yml -i ./ansible/inventory/inventory.yml --tags base
 ```
 
-## 
+## Setup nginx web server
+Run the ansible playbook to configure and start nginx web server
+```bash
+/ansible-playbook ./ansiblesetup.yml -i ./ansible/inventory/inventory.yml --tags nginx
+```
+
+## Setup SSH
+Run the ansible playbook to setup SSH access to the Linux server
+```bash
+ansible-playbook ./ansible/setup.yml -i ./ansible/inventory/inventory.yml --tags ssh
+```
+
+## Install your web application
+Run the ansible playbook to install your archived web application to the Linux server
+```bash
+ansible-playbook ./ansible/setup.yml -i ./ansible/inventory/inventory.yml --tags app
+```
