@@ -39,11 +39,16 @@ cd configuration-management
 ## Configure inventory group vars
 The ansible playbooks utilize inventory group vars to populate the inventory file, ansible user, and ssh pem file to use.
 
+### Easily update your IP Address and Private key
 After your instance is running, obtain your instances IP address and ssh pem file. You will need to pass this infomation into the provided tool to update the group vars file (named aws) with your desired values.
 
 ```bash
 ./tools/update-group-vars.sh <your Linux host IP address> <your ssh public key>
 ```
+
+### Other Variable adjustments
+If you desire more or less base application on your Linux server, ajust the base_utilities array found in `./ansible/inventory/group_vars/aws.yml` file.
+Either delete or add applications to this list, following the same format.
 
 ## Base configuration
 Run the ansible playbook base to update the instance with desired base content
