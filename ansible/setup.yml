@@ -12,7 +12,6 @@
 
 - name: "Configure Linux Ubuntu AWS EC2 Instance"
   hosts: aws
-  become_method: sudo
   become: true
   gather_facts: false
   tasks:
