@@ -9,8 +9,8 @@ fi
 
 NEW_IP="$1"
 NEW_KEY="$2"
-dirname=$(dirname "$0")
-GROUP_VAR_FILE="$dirname/ansible/inventory/group_vars/aws.yml"
+mydir="$(pwd)"
+GROUP_VAR_FILE="${mydir}/ansible/inventory/group_vars/aws.yml"
 
 # Ensure the group_vars file exists
 if [ ! -f "$GROUP_VAR_FILE" ]; then
@@ -30,7 +30,7 @@ awk -v new_ip="$NEW_IP" -v new_key="$NEW_KEY" '
         sub(/: .*/, ": " new_key)
     }
     print
-}' "$GROUP_VAR_FILE" > ${dirname}/ansible/inventory/group_vars/aws.tmp && mv ${dirname}/ansible/inventory/group_vars/aws.tmp "$GROUP_VAR_FILE"
+}' "$GROUP_VAR_FILE" > ${mydir}/ansible/inventory/group_vars/aws.tmp && mv ${mydir}/ansible/inventory/group_vars/aws.tmp "$GROUP_VAR_FILE"
 
 # Extract the newly written values directly from the file to confirm success
 CONFIRMED_IP=$(awk '/^ip_address:/ {print $2}' "$GROUP_VAR_FILE")
