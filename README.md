@@ -59,7 +59,7 @@ ansible-playbook ./ansible/setup.yml -i ./ansible/inventory/inventory.yml --tags
 ## Setup nginx web server
 Run the ansible playbook to configure and start nginx web server
 ```bash
-/ansible-playbook ./ansiblesetup.yml -i ./ansible/inventory/inventory.yml --tags nginx
+ansible-playbook ./ansible/setup.yml -i ./ansible/inventory/inventory.yml --tags nginx
 ```
 
 ## Setup SSH
