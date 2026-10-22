@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# Ensure both IP address and key path were passed as arguments
-if [ -z "$1" ] || [ -z "$2" ]; then
+# Ensure pass parameter for IP address, key path, and githp ssh key path avaialble
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
     echo "❌ Error: Missing arguments."
-    echo "Usage: $0 <new_ip_address> <path_to_private_key>"
+    echo "Usage: $0 <new_ip_address> <path_to_private_key> <path_to_github_ssh_key>"
     exit 1
 fi
 
 NEW_IP="$1"
 NEW_KEY="$2"
+NEW_GITHUB_KEY="$3"  # Optional third argument for GitHub SSH key
 mydir="$(pwd)"
 GROUP_VAR_FILE="${mydir}/ansible/inventory/group_vars/aws.yml"
 
@@ -19,7 +20,7 @@ if [ ! -f "$GROUP_VAR_FILE" ]; then
 fi
 
 # Run the cross-platform awk command to safely update the keys
-awk -v new_ip="$NEW_IP" -v new_key="$NEW_KEY" '
+awk -v new_ip="$NEW_IP" -v new_key="$NEW_KEY" -v new_github_key="$NEW_GITHUB_KEY" '
 {
     # Update ip_address field
     if ($1 == "ip_address:") {
@@ -28,6 +29,10 @@ awk -v new_ip="$NEW_IP" -v new_key="$NEW_KEY" '
     # Update ssh_pem field
     if ($1 == "ssh_pem:") {
         sub(/: .*/, ": " new_key)
+    }
+    # Update github_ssh_key field
+    if ($1 == "github_ssh_key:") {
+        sub(/: .*/, ": " new_github_key)
     }
     print
 }' "$GROUP_VAR_FILE" > ${mydir}/ansible/inventory/group_vars/aws.tmp && mv ${mydir}/ansible/inventory/group_vars/aws.tmp "$GROUP_VAR_FILE"

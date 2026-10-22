@@ -1,0 +1,49 @@
+- name: Clone and deploy specific subfolder from public Git repo
+  block:
+    - name: Ensure remote .ssh directory exists with secure permissions
+      ansible.builtin.file:
+        path: /home/ubuntu/.ssh
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0700'
+
+    - name: Copy GitHub SSH Private Key to remote host securely
+      ansible.builtin.copy:
+        src: "{{ github_local_private_key }}"
+        dest: "{{ github_remote_private_key_path }}"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'
+
+    - name: Clone repository to a temporary path via SSH
+      ansible.builtin.git:
+        repo: "git@github.com:jjk66/static-site-server.git"
+        dest: /tmp/static-site-server
+        version: main
+        force: yes
+
+    - name: Ensure target NGINX root directory exists
+      ansible.builtin.file:
+        path: /var/www/html
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Copy only the simple-static-site content to NGINX root
+      ansible.builtin.copy:
+        src: /tmp/static-site-server/simple-static-site/  # Trailing slash copies contents only
+        dest: /var/www/html/
+        remote_src: yes
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      notify: restart nginx                                # Triggers your handler on file changes
+
+  always:
+    - name: Remove temporary cloned repository
+      ansible.builtin.file:
+        path: /tmp/static-site-server
+        state: absent
+  become: yes
